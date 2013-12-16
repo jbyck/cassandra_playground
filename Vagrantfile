@@ -3,7 +3,6 @@
 
 ['berkshelf', 'omnibus'].each { |plugin| Vagrant.require_plugin "vagrant-#{plugin}" }
 
-
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -16,9 +15,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box     = "ubuntu-precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
   
-  config.vm.hostname = "cassandra-playground-berkshelf"
+  config.vm.hostname = "cassandra-playground"
   
-  config.vm.provider :virtualbox
+  config.vm.provider :virtualbox do |vb|
+    vb.memory = 2048
+  end
   
   ## Berkshelf Plugin
   config.berkshelf.enabled = true
@@ -28,11 +29,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :chef_solo do |chef|
     
     chef.add_recipe 'apt'
-    chef.add_recipe 'cassandra'
+    chef.add_recipe 'cassandra::datastax'
     
     chef.json = {
       cassandra: {
+        package_name: 'dsc20',
         version: '2.0.3'
+      },
+      java: {
+        install_flavor: 'oracle',
+        jdk_version:    '7',
+        oracle: {
+          accept_oracle_download_terms: true,
+        }
       }
     }
     
