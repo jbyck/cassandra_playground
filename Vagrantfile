@@ -1,10 +1,10 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-['berkshelf', 'omnibus'].each { |plugin| Vagrant.require_plugin "vagrant-#{plugin}" }
-
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
+VAGRANTFILE_PLUGINS_REQ = ['berkshelf', 'omnibus']
+
+VAGRANTFILE_PLUGINS_REQ.each { |plugin| Vagrant.require_plugin "vagrant-#{plugin}" }
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. The most common configuration
