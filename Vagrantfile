@@ -17,8 +17,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   config.vm.hostname = "cassandra-playground"
   
-  config.vm.provider :virtualbox do |vb|
-    vb.memory = 2048
+  config.vm.network :forwarded_port, host: 9160, guest: 9160
+  
+  config.vm.provider :virtualbox do |v|
+   v.customize ["modifyvm", :id, "--memory", 2048]
   end
   
   ## Berkshelf Plugin
@@ -29,12 +31,24 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :chef_solo do |chef|
     
     chef.add_recipe 'apt'
+    chef.add_recipe 'vim'
+    chef.add_recipe 'identify::system_install'
     chef.add_recipe 'cassandra::datastax'
     
     chef.json = {
+      identify: {
+        color: 'white',
+        use_node_name: true
+      },
       cassandra: {
         package_name: 'dsc20',
-        version: '2.0.3'
+        jvm: {
+          xmx: 512
+        },
+        listen_address: '',
+        seeds: [],
+        rpc_address: '0.0.0.0',
+        vnodes: 256,
       },
       java: {
         install_flavor: 'oracle',
