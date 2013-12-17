@@ -1,4 +1,4 @@
-# cassandra-playground
+# cassandra_playground
 
 Simple VM setup for base Cassandra installation.
 
